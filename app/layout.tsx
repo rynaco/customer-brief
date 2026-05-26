@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Customer Brief — re-engagement intel for PostHog CSMs",
-  description: "Scrape a PostHog customer's website and generate outreach hooks that connect their business to specific PostHog products.",
+  title: "Customer Brief",
+  description: "Tactics for re-engaging a customer who's gone quiet.",
 };
 
 export default function RootLayout({
