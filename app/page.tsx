@@ -72,12 +72,16 @@ export default function Home() {
     <div className="flex-1 w-full bg-zinc-50 dark:bg-zinc-950">
       <div className="mx-auto max-w-4xl px-6 py-12">
         <header className="mb-10">
+          <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-900 dark:bg-orange-950/50 dark:text-orange-200">
+            For PostHog CSMs
+          </div>
           <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Customer Brief
           </h1>
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-            Drop a customer&apos;s URL. Get people, news, brand voice, and outreach hooks
-            to re-engage them in their own terms.
+            Drop the URL of a PostHog customer who&apos;s gone quiet. Get people, news,
+            brand voice, and outreach hooks that connect their business to specific
+            PostHog products.
           </p>
         </header>
 

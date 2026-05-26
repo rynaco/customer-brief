@@ -151,29 +151,49 @@ const briefTool: Anthropic.Messages.Tool = {
   },
 };
 
+const POSTHOG_PRODUCTS = `
+- **Product Analytics**: funnels, retention, dashboards, user paths, cohorts
+- **Session Replay**: watch real user sessions to debug bugs and UX friction
+- **Feature Flags**: gate features by user/segment, safe rollouts, kill switches
+- **Experiments**: A/B tests with proper statistics, multivariate
+- **Error Tracking**: catch frontend & backend exceptions, group by impact
+- **Surveys**: in-product feedback, NPS, targeted by behavior
+- **Web Analytics**: simpler page/traffic view alongside product analytics
+- **Data Warehouse / SQL**: unify product events with CRM, billing, support data
+- **LLM Observability**: traces, evals, generations for AI products
+- **Heatmaps**: click/scroll maps on top of session replay`;
+
 function buildPrompt(scrape: ScrapeResult): string {
   const pageBlocks = scrape.pages
     .map(p => `## Page: ${p.title}\nURL: ${p.url}\n\n${p.text}`)
     .join('\n\n---\n\n');
 
-  return `You are analyzing a company's website to help a Customer Success Manager (CSM) at Float (a resource management SaaS) prepare personalized outreach to a customer who has been disengaged.
+  return `You are analyzing the website of a **PostHog customer** to help a PostHog Customer Success Manager re-engage them. This customer signed up for PostHog but has gone quiet — they may not have onboarded fully, may not realize what's possible, or may be using a competitor for some of what PostHog covers.
 
-Your job: extract a structured engagement brief from the scraped content below.
+Your job: extract a structured engagement brief from the scraped content below. The brief should help the CSM speak the customer's language and connect PostHog's products to the customer's actual business.
 
-**Domain**: ${scrape.domain}
+**PostHog's product catalog** (use this to ground conversation_hooks):
+${POSTHOG_PRODUCTS}
+
+**Target company domain**: ${scrape.domain}
 **Detected CSS colors** (raw, may be irrelevant — pick the ones that look like brand colors): ${scrape.cssColors.slice(0, 12).join(', ') || 'none detected'}
 **Detected font families**: ${scrape.fontFamilies.slice(0, 5).join(', ') || 'none detected'}
 **Detected logo URL**: ${scrape.logo ?? scrape.ogImage ?? 'none'}
 
 **Guidance**:
-- For products: extract distinct product lines or modules (e.g. "Product Analytics", "Session Replay"). Skip generic features. Empty if it's a single-product company.
-- For customers: pull customer/logo names mentioned anywhere — case studies, logo walls, testimonials. Just the company names, deduped. This is high value for outreach.
-- For people: prioritize founders, execs, and anyone quoted recently. Skip generic team-page lists if you can find more contextual mentions.
-- For news: look for product launches, funding, hiring, customer announcements, blog posts with dates.
-- For voice: this is the most important section. Be specific. "Friendly" is useless; "uses second-person, contractions, and short sentences punctuated by industry jargon" is useful.
-- For sample_paragraph: write a NEW paragraph in their voice, as if it could appear on their site. Do not copy existing text.
-- For conversation_hooks: each should be concrete enough that the CSM could literally paste it into an email. "Congrats on the Series B" not "mention their recent news". Reference specific customers, products, or news when possible.
-- For visual.primary_colors: pick 2-4 hex codes from the detected CSS that look like *brand* colors (not generic grays, blacks, or whites). If none look brand-y, return empty.
+- For products: extract THIS COMPANY's own product lines or modules (not PostHog's). Skip generic features. Empty if it's a single-product company.
+- For customers: pull THIS COMPANY's customers/logos — case studies, logo walls, testimonials. Just brand names, deduped.
+- For people: prioritize founders, execs, heads of engineering/product/data — anyone a CSM might address or reference. Skip generic team-page lists.
+- For news: product launches, funding, hiring, customer announcements, blog posts with dates.
+- For voice: this is critical. Be specific. "Friendly" is useless; "uses second-person, contractions, and short sentences punctuated by aerospace jargon" is useful.
+- For sample_paragraph: write a NEW paragraph in THEIR voice, as if it could appear on their site. Do not copy existing text.
+- For conversation_hooks: this is the most valuable output. Each hook MUST do two things at once:
+  1. Reference something specific and current about this company (a product they ship, a customer they serve, recent news, a stated focus).
+  2. Connect that to a SPECIFIC PostHog product by name (Session Replay, Feature Flags, Experiments, etc.) and explain *why* it would matter for them.
+  Example good hook: "Boeing's 737 MAX recertification work means every cockpit-software UI change is high-stakes — PostHog's Session Replay + Error Tracking would let your avionics team see exactly where pilots stumble in training simulators before any change ships."
+  Example bad hook: "Have you tried Session Replay?"
+  Produce 4-6 hooks, each tied to a different PostHog product if possible.
+- For visual.primary_colors: pick 2-4 hex codes that look like *brand* colors (not generic grays, blacks, or whites). Empty if none stand out.
 - If a section has no signal in the scrape, return an empty array — do not fabricate.
 
 Call the \`submit_brief\` tool with your analysis.
@@ -220,7 +240,7 @@ export async function draftOutreachEmail(
     messages: [
       {
         role: 'user',
-        content: `You are drafting a re-engagement email from a Float CSM to a disengaged customer. The email should feel personal and match the customer's brand voice — like the CSM has actually been paying attention to their world.
+        content: `You are drafting a re-engagement email from a PostHog Customer Success Manager to a disengaged PostHog customer. They signed up for PostHog but haven't been actively using it. The email should feel personal and match the customer's brand voice — like the CSM has actually been paying attention to their world.
 
 **Customer brief**:
 ${JSON.stringify(brief, null, 2)}
@@ -229,10 +249,11 @@ ${JSON.stringify(brief, null, 2)}
 **Additional context**: ${notes || '(none)'}
 
 Write a short re-engagement email (max 120 words). Requirements:
-- Match the customer's voice (see brief.voice).
-- Open with a specific reference to one of the conversation_hooks or a recent_news item — never a generic "hope you're well".
-- Mention Float briefly and naturally; the goal is to start a conversation, not pitch.
-- End with one low-friction ask (e.g., "15 min next week?").
+- Match the customer's voice (see brief.voice) — mirror their tone, sentence length, and vocabulary.
+- Open with a specific reference: a conversation_hook, a recent_news item, or a named customer/product of theirs. Never "hope you're well".
+- Name ONE specific PostHog product (Session Replay, Feature Flags, Product Analytics, Experiments, Error Tracking, Surveys, LLM Observability, etc.) and tie it concretely to something this company does.
+- Acknowledge they're already on PostHog — this is re-engagement, not a cold pitch. Phrase the ask around what they could be doing with it.
+- End with one low-friction ask (e.g., "15 min next week to walk through how their team at \${named_peer} uses it?").
 - Return ONLY the email body. No subject line, no signature placeholders like [Your Name], no preamble.`,
       },
     ],
