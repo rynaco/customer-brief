@@ -1,7 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Brief } from '@/lib/analyze';
+
+const LOADING_MESSAGES = [
+  'Snooping around their site…',
+  'Reading their About page so you don’t have to…',
+  'Figuring out who they hang out with…',
+  'Eavesdropping on their brand voice…',
+  'Skimming the customer logos…',
+  'Decoding their corporate dialect…',
+  'Picking out the juicy bits…',
+  'Building you a cheat sheet…',
+  'Polishing the angles…',
+  'Almost there, ironing out the hooks…',
+];
 
 type AnalyzeResponse = {
   brief: Brief;
@@ -18,11 +31,24 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
 
+  const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
+
   const [csmName, setCsmName] = useState('');
   const [notes, setNotes] = useState('');
   const [emailLoading, setEmailLoading] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingMsgIdx(0);
+      return;
+    }
+    const id = setInterval(() => {
+      setLoadingMsgIdx(i => (i + 1) % LOADING_MESSAGES.length);
+    }, 2500);
+    return () => clearInterval(id);
+  }, [loading]);
 
   async function handleAnalyze(e: React.FormEvent) {
     e.preventDefault();
@@ -100,9 +126,15 @@ export default function Home() {
         </form>
 
         {loading && (
-          <p className="mt-6 text-sm text-muted">
-            Scraping the site and analyzing with Claude. This can take 20–40 seconds.
-          </p>
+          <div className="mt-6 flex items-center gap-3 rounded-md border border-border-soft bg-surface-muted px-4 py-3 text-sm text-muted-strong">
+            <span
+              aria-hidden
+              className="inline-block h-2 w-2 animate-pulse rounded-full bg-accent"
+            />
+            <span key={loadingMsgIdx} className="animate-[fadeIn_400ms_ease-out]">
+              {LOADING_MESSAGES[loadingMsgIdx]}
+            </span>
+          </div>
         )}
 
         {error && (
