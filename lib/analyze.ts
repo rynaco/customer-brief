@@ -187,12 +187,13 @@ ${POSTHOG_PRODUCTS}
 - For news: product launches, funding, hiring, customer announcements, blog posts with dates.
 - For voice: this is critical. Be specific. "Friendly" is useless; "uses second-person, contractions, and short sentences punctuated by aerospace jargon" is useful.
 - For sample_paragraph: write a NEW paragraph in THEIR voice, as if it could appear on their site. Do not copy existing text.
-- For conversation_hooks: this is the most valuable output. Each hook MUST do two things at once:
-  1. Reference something specific and current about this company (a product they ship, a customer they serve, recent news, a stated focus).
-  2. Connect that to a SPECIFIC PostHog product by name (Session Replay, Feature Flags, Experiments, etc.) and explain *why* it would matter for them.
-  Example good hook: "Boeing's 737 MAX recertification work means every cockpit-software UI change is high-stakes — PostHog's Session Replay + Error Tracking would let your avionics team see exactly where pilots stumble in training simulators before any change ships."
-  Example bad hook: "Have you tried Session Replay?"
-  Produce 4-6 hooks, each tied to a different PostHog product if possible.
+- For conversation_hooks: the most valuable output. Each hook should reference something specific about this company (a product they ship, a customer they serve, recent news, a stated focus) and tie it to a specific PostHog product, with a clear reason why it would help. Produce 4-6 hooks, each tied to a different PostHog product when possible.
+  TONE RULES (apply to every hook):
+  - Talk like a human, not a salesperson. Conversational and direct. Never call them "leads", "stakeholders", or "decision-makers". Avoid "touch base", "circle back", "leverage", "synergy", "unlock value", "drive outcomes".
+  - Do not use em-dashes (—), en-dashes (–), or colons inside the hook. Use periods and commas. Break compound thoughts into two short sentences instead of joining with punctuation.
+  Good hook: "You're shipping safety-critical cockpit software for the 737 MAX. Session Replay would let your training team watch exactly where pilots stumble in simulator runs, before any change reaches a real aircraft."
+  Bad hook (too generic): "Have you tried Session Replay?"
+  Bad hook (sales-y / dashy): "Boeing's 737 MAX work — high stakes for any UI change — is the perfect leverage point for Session Replay to drive outcomes."
 - For visual.primary_colors: pick 2-4 hex codes that look like *brand* colors (not generic grays, blacks, or whites). Empty if none stand out.
 - If a section has no signal in the scrape, return an empty array — do not fabricate.
 
@@ -249,11 +250,14 @@ ${JSON.stringify(brief, null, 2)}
 **Additional context**: ${notes || '(none)'}
 
 Write a short re-engagement email (max 120 words). Requirements:
-- Match the customer's voice (see brief.voice) — mirror their tone, sentence length, and vocabulary.
-- Open with a specific reference: a conversation_hook, a recent_news item, or a named customer/product of theirs. Never "hope you're well".
-- Name ONE specific PostHog product (Session Replay, Feature Flags, Product Analytics, Experiments, Error Tracking, Surveys, LLM Observability, etc.) and tie it concretely to something this company does.
-- Acknowledge they're already on PostHog — this is re-engagement, not a cold pitch. Phrase the ask around what they could be doing with it.
-- End with one low-friction ask (e.g., "15 min next week to walk through how their team at \${named_peer} uses it?").
+- Match the customer's voice (see brief.voice). Mirror their tone, sentence length, and word choices.
+- Open with something specific. A conversation hook, a recent news item, or a named customer or product of theirs. Never "hope you're well" or any similar filler opener.
+- Name ONE specific PostHog product (Session Replay, Feature Flags, Product Analytics, Experiments, Error Tracking, Surveys, LLM Observability, etc.) and tie it to something this company actually does.
+- Acknowledge they're already on PostHog. This is re-engagement, not a cold pitch. Frame the ask around what they could be doing with it.
+- End with one easy ask. Something like "Got 15 minutes next week to walk through how a team like yours is using it?"
+- TONE RULES:
+  - Talk like a human. Conversational and direct. Never call them a "lead", "stakeholder", or "decision-maker". Avoid "touch base", "circle back", "leverage", "synergy", "unlock value", "drive outcomes", "align".
+  - Do not use em-dashes (—), en-dashes (–), or colons in the body. Use periods and commas. Break compound thoughts into two short sentences.
 - Return ONLY the email body. No subject line, no signature placeholders like [Your Name], no preamble.`,
       },
     ],
