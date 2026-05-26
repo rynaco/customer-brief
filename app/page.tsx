@@ -69,13 +69,13 @@ export default function Home() {
   }
 
   return (
-    <div className="flex-1 w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex-1 w-full">
       <div className="mx-auto max-w-4xl px-6 py-12">
         <header className="mb-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Customer Brief
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            Customer <span className="text-accent">Brief</span>
           </h1>
-          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-muted">
             Drop in a customer&apos;s URL and get a quick brief on their org, people,
             and some ideas to engage them.
           </p>
@@ -87,26 +87,26 @@ export default function Home() {
             value={url}
             onChange={e => setUrl(e.target.value)}
             placeholder="acme.com"
-            className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             disabled={loading}
           />
           <button
             type="submit"
             disabled={loading || !url.trim()}
-            className="rounded-md bg-zinc-900 px-4 py-2 font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-accent px-4 py-2 font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
           >
             {loading ? 'Analyzing…' : 'Generate brief'}
           </button>
         </form>
 
         {loading && (
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-muted">
             Scraping the site and analyzing with Claude. This can take 20–40 seconds.
           </p>
         )}
 
         {error && (
-          <div className="mt-6 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+          <div className="mt-6 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950/60 dark:text-red-200">
             {error}
           </div>
         )}
@@ -114,12 +114,12 @@ export default function Home() {
         {result && <BriefView data={result} />}
 
         {result && (
-          <section className="mt-10 rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+          <section className="mt-10 rounded-lg border border-border bg-surface p-6 shadow-[2px_2px_0_0_var(--border)]">
+            <h2 className="text-xl font-bold text-foreground">
               Draft a re-engagement email
             </h2>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Claude will match this customer&apos;s voice and reference a conversation hook.
+            <p className="mt-1 text-sm text-muted">
+              We&apos;ll match this customer&apos;s voice and reference a conversation hook.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <input
@@ -127,31 +127,31 @@ export default function Home() {
                 value={csmName}
                 onChange={e => setCsmName(e.target.value)}
                 placeholder="Your name (CSM)"
-                className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="rounded-md border border-border bg-surface px-3 py-2 text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               />
               <input
                 type="text"
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
                 placeholder="Extra context (e.g., last touched in Feb)"
-                className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="rounded-md border border-border bg-surface px-3 py-2 text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               />
             </div>
             <button
               type="button"
               onClick={handleDraftEmail}
               disabled={emailLoading}
-              className="mt-4 rounded-md bg-zinc-900 px-4 py-2 font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="mt-4 rounded-md bg-accent px-4 py-2 font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
             >
               {emailLoading ? 'Drafting…' : 'Draft email'}
             </button>
             {emailError && (
-              <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+              <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950/60 dark:text-red-200">
                 {emailError}
               </div>
             )}
             {email && (
-              <pre className="mt-4 whitespace-pre-wrap rounded-md border border-zinc-200 bg-zinc-50 p-4 font-sans text-sm text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100">
+              <pre className="mt-4 whitespace-pre-wrap rounded-md border border-border-soft bg-surface-muted p-4 font-sans text-sm text-foreground">
                 {email}
               </pre>
             )}
@@ -166,7 +166,7 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
   const { brief, meta } = data;
   return (
     <section className="mt-8 space-y-6">
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-lg border border-border bg-surface p-6 shadow-[2px_2px_0_0_var(--border)]">
         <div className="flex items-start gap-4">
           {brief.visual.logo_url && (
             <img
@@ -176,11 +176,11 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
             />
           )}
           <div className="flex-1">
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-2xl font-bold text-foreground">
               {brief.company_name}
             </h2>
-            <p className="mt-1 text-zinc-600 dark:text-zinc-400">{brief.one_line_pitch}</p>
-            <p className="mt-2 text-xs text-zinc-500">
+            <p className="mt-1 text-muted-strong">{brief.one_line_pitch}</p>
+            <p className="mt-2 text-xs text-muted">
               {meta.domain} · {meta.pagesScraped.length} pages scraped
             </p>
           </div>
@@ -195,7 +195,7 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
                 {brief.products.map(p => (
                   <span
                     key={p}
-                    className="rounded-md bg-blue-50 px-2 py-0.5 text-sm text-blue-900 dark:bg-blue-950/40 dark:text-blue-100"
+                    className="rounded-md border border-border-soft bg-surface-muted px-2 py-0.5 text-sm text-muted-strong"
                   >
                     {p}
                   </span>
@@ -209,7 +209,7 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
                 {brief.customers.map(c => (
                   <span
                     key={c}
-                    className="rounded-md bg-emerald-50 px-2 py-0.5 text-sm text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100"
+                    className="rounded-md border border-border-soft bg-surface-muted px-2 py-0.5 text-sm text-muted-strong"
                   >
                     {c}
                   </span>
@@ -221,12 +221,12 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
       )}
 
       {brief.conversation_hooks.length > 0 && (
-        <Card title="Conversation hooks">
+        <Card title="Conversation hooks" accent>
           <ul className="space-y-2">
             {brief.conversation_hooks.map((h, i) => (
               <li
                 key={i}
-                className="rounded-md bg-amber-50 p-3 text-sm text-amber-950 dark:bg-amber-950/40 dark:text-amber-100"
+                className="rounded-md border-l-4 border-accent bg-accent-soft p-3 text-sm text-foreground"
               >
                 {h}
               </li>
@@ -241,14 +241,16 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
             <ul className="space-y-3">
               {brief.people.map((p, i) => (
                 <li key={i}>
-                  <div className="font-medium text-zinc-900 dark:text-zinc-50">
+                  <div className="font-semibold text-foreground">
                     {p.name}
                     {p.title && (
-                      <span className="ml-2 font-normal text-zinc-500">— {p.title}</span>
+                      <span className="ml-2 font-normal text-muted">
+                        · {p.title}
+                      </span>
                     )}
                   </div>
                   {p.context && (
-                    <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">
+                    <p className="mt-0.5 text-sm text-muted-strong">
                       {p.context}
                     </p>
                   )}
@@ -263,13 +265,13 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
             <ul className="space-y-3">
               {brief.recent_news.map((n, i) => (
                 <li key={i}>
-                  <div className="font-medium text-zinc-900 dark:text-zinc-50">
+                  <div className="font-semibold text-foreground">
                     {n.url ? (
                       <a
                         href={n.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="hover:underline"
+                        className="hover:text-accent hover:underline"
                       >
                         {n.headline}
                       </a>
@@ -277,9 +279,9 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
                       n.headline
                     )}
                   </div>
-                  {n.date && <div className="text-xs text-zinc-500">{n.date}</div>}
+                  {n.date && <div className="text-xs text-muted">{n.date}</div>}
                   {n.summary && (
-                    <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">
+                    <p className="mt-0.5 text-sm text-muted-strong">
                       {n.summary}
                     </p>
                   )}
@@ -296,7 +298,7 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
             {brief.voice.tone.map(t => (
               <span
                 key={t}
-                className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                className="rounded-full border border-border-soft bg-surface-muted px-2.5 py-0.5 text-xs text-muted-strong"
               >
                 {t}
               </span>
@@ -304,16 +306,16 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
           </div>
         )}
         {brief.voice.vocabulary_notes && (
-          <p className="mt-3 text-sm text-zinc-700 dark:text-zinc-300">
+          <p className="mt-3 text-sm text-muted-strong">
             {brief.voice.vocabulary_notes}
           </p>
         )}
         {brief.voice.signature_phrases.length > 0 && (
           <div className="mt-3">
-            <div className="text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted">
               Signature phrases
             </div>
-            <ul className="mt-1 list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
+            <ul className="mt-1 list-disc pl-5 text-sm text-muted-strong">
               {brief.voice.signature_phrases.map((p, i) => (
                 <li key={i}>{p}</li>
               ))}
@@ -321,14 +323,14 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
           </div>
         )}
         {brief.voice.sample_paragraph && (
-          <blockquote className="mt-3 border-l-2 border-zinc-300 pl-3 text-sm italic text-zinc-700 dark:border-zinc-700 dark:text-zinc-300">
+          <blockquote className="mt-3 border-l-2 border-accent pl-3 text-sm italic text-muted-strong">
             {brief.voice.sample_paragraph}
           </blockquote>
         )}
       </Card>
 
-      <details className="rounded-lg border border-zinc-200 bg-white p-4 text-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <summary className="cursor-pointer text-zinc-600 dark:text-zinc-400">
+      <details className="rounded-lg border border-border-soft bg-surface p-4 text-sm">
+        <summary className="cursor-pointer text-muted">
           Pages scraped ({meta.pagesScraped.length})
         </summary>
         <ul className="mt-2 space-y-1 text-xs">
@@ -338,9 +340,9 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
                 href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-zinc-700 hover:underline dark:text-zinc-300"
+                className="text-muted-strong hover:text-accent hover:underline"
               >
-                {p.title} — {p.url}
+                {p.title} · {p.url}
               </a>
             </li>
           ))}
@@ -350,10 +352,24 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
   );
 }
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
+function Card({
+  title,
+  children,
+  accent = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  accent?: boolean;
+}) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+    <div
+      className={`rounded-lg border bg-surface p-6 ${
+        accent
+          ? 'border-border shadow-[2px_2px_0_0_var(--accent)]'
+          : 'border-border shadow-[2px_2px_0_0_var(--border)]'
+      }`}
+    >
+      <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted">
         {title}
       </h3>
       {children}
