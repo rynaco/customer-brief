@@ -76,7 +76,8 @@ export default function Home() {
             Customer Brief
           </h1>
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-            Tactics for re-engaging a customer who&apos;s gone quiet. Drop their URL.
+            Drop in a customer&apos;s URL and get a quick brief on their org, people,
+            and some ideas to engage them.
           </p>
         </header>
 
