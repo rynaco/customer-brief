@@ -184,22 +184,6 @@ function BriefView({ data }: { data: AnalyzeResponse }) {
             </p>
           </div>
         </div>
-        {brief.visual.primary_colors.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {brief.visual.primary_colors.map(c => (
-              <div
-                key={c}
-                className="flex items-center gap-2 rounded-md border border-zinc-200 px-2 py-1 text-xs dark:border-zinc-800"
-              >
-                <span
-                  className="inline-block h-4 w-4 rounded"
-                  style={{ background: c }}
-                />
-                <span className="font-mono text-zinc-700 dark:text-zinc-300">{c}</span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {(brief.products.length > 0 || brief.customers.length > 0) && (
